@@ -97,3 +97,9 @@ function getContentBetweenTags(startElement, endElement) {
 
     return content;
 }
+
+(function addSmoothScroll() {
+    const style = document.createElement('style');
+    style.textContent = 'html { scroll-behavior: smooth; }';
+    document.head.appendChild(style);
+})();
