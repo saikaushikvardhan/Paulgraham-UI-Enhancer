@@ -1,5 +1,6 @@
 // To Do
 // 1. Create a popup html and js and interact with content script to modify the width, font type and font size maybe.
+// 2. Improve the back button experience. 
 
 const url = window.location.href;
 const allAnchorTags = document.querySelectorAll('a');
@@ -34,15 +35,17 @@ for (let i = 0; i < filteredAnchorTagIds.length - 1; i++) {
 }
 
 // Handling the edge case.
-let lastAnchorTag = filteredAnchorTagIds[filteredAnchorTagIds.length - 1];
-let lastTagUrl = lastAnchorTag.href;
-let lastFootNoteId = lastTagUrl.substring(lastTagUrl.indexOf("#")).substring(1);
-let lastFootNoteElement = document.getElementsByName(lastFootNoteId)[0];
-let lastElement = getLastElementInThePage();
+if (Boolean(filteredAnchorTagIds)) {
+    let lastAnchorTag = filteredAnchorTagIds[filteredAnchorTagIds.length - 1];
+    let lastTagUrl = lastAnchorTag.href;
+    let lastFootNoteId = lastTagUrl.substring(lastTagUrl.indexOf("#")).substring(1);
+    let lastFootNoteElement = document.getElementsByName(lastFootNoteId)[0];
+    let lastElement = getLastElementInThePage();
 
-let content = getContentBetweenTags(lastFootNoteElement, lastElement);
-addToolTipForTheCurrentTag(lastAnchorTag, content);
-addGoBackUpAnchor(lastFootNoteElement, lastAnchorTag);
+    let content = getContentBetweenTags(lastFootNoteElement, lastElement);
+    addToolTipForTheCurrentTag(lastAnchorTag, content);
+    addGoBackUpAnchor(lastFootNoteElement, lastAnchorTag);
+}
 
 function getLastElementInThePage() {
     const allFontElements = document.querySelectorAll('font');
@@ -68,6 +71,8 @@ function addGoBackUpAnchor(footNoteElement, currentTag) {
     let currentFootNoteName = curretTagUrl.substring(curretTagUrl.indexOf("#")).substring(1);
     if (!currentTagName) {
         currentTagName = currentFootNoteName + 'f';
+    } else {
+        return;
     }
 
     currentTag.setAttribute('name', currentTagName);
