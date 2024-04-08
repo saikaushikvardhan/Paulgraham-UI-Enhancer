@@ -6,6 +6,7 @@
     "content_scripts":[
         {
             "js": ["scripts/content-script.js"],
+            "css": ["scripts/style.css"],
             "matches": ["https://paulgraham.com/*"]
         }
     ]
