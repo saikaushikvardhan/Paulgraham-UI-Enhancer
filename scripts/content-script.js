@@ -106,3 +106,34 @@ function getContentBetweenTags(startElement, endElement) {
     style.textContent = 'html { scroll-behavior: smooth; }';
     document.head.appendChild(style);
 })();
+
+
+/*
+To Do
+1. Add css to the content.
+2. Add a sticky toolbar at the top.
+3. Interact with popup.html to enable font style and size customization.
+*/
+
+(function beautifyArticle() {
+    let tableData = document.querySelectorAll('td');
+    let articleDiv = document.createElement('div');
+    articleDiv.innerHTML = tableData[2].innerHTML;
+
+    let body = document.querySelectorAll('body')[0];
+    let articleContent = document.createElement('div');
+    let articleTableData = articleDiv.querySelectorAll('td')[0];
+
+    let articleHeading = document.createElement('h1')
+    articleHeading.innerHTML = articleTableData.querySelectorAll('img')[0].alt;
+    console.log("article Heading: " + articleHeading.textContent);
+    articleContent.appendChild(articleHeading);
+    let articleText = document.createElement('div');
+    articleText.innerHTML = articleTableData.querySelectorAll('font')[0].innerHTML;
+    console.log("article text: " + articleText.textContent);
+
+    articleContent.appendChild(articleText);
+    body.innerHTML = '';
+    body.appendChild(articleContent);
+
+})();
