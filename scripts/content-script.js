@@ -1,44 +1,99 @@
 // To Do
-// 1. Maintain a map to identify the anchor tags which have already been processed, so that you won't process footnotes again
-// 2. Fetch the content and create a tool tip
-// 3. Instead of making the current anchor clickable, create a new anchor called ^.
-// 4. Make the scroll after the click smooth.
-// 5. Create a popup html and js and interact with content script to modify the width, font type and font size maybe.
-
+// 1. Make the scroll after the click smooth.
+// 2. Create a popup html and js and interact with content script to modify the width, font type and font size maybe.
+// 3. Stretch To-Do: How can we make this work for all the sites, despite different html structures for diff sites. 
 
 const url = window.location.href;
 const allAnchorTags = document.querySelectorAll('a');
+let filteredAnchorTagIds = [];
 
-for (var i = 0; i < allAnchorTags.length; i++) {
+for (let i = 0; i < allAnchorTags.length; i++) {
     const currTag = allAnchorTags[i];
-    const currTagUrl = allAnchorTags[i].href;
-
+    const currTagUrl = currTag.href;
 
     if (currTagUrl && currTagUrl.includes(url) && currTagUrl.includes("#")) {
-        var footNoteId = currTagUrl.substring(currTagUrl.indexOf("#")).substring(1); // removing the '#'
-        var currTagId = currTag.name;
-
-        if (!currTagId) {
-            currTagId = footNoteId + 'f';
-        } else {
-            continue;
-        }
-        
-        currTag.setAttribute("name", currTagId);
-        currTagId = "#" + currTagId;
-        
-        // setting the current element reference to the footnote.
-        const footNoteElement = document.getElementsByName(footNoteId)[0];
-        footNoteElement.href = url+currTagId;
-        const goBackUpAnchor = document.createElement('a');
-        goBackUpAnchor.href = url+currTagId;
-        goBackUpAnchor.innerHTML = "^";
-        footNoteElement.previousSibling.before(goBackUpAnchor);
-        
-
-        const content = footNoteElement.nextSibling;
+        filteredAnchorTagIds.push(currTag);
     }
 }
 
-console.log(allAnchorTags.length);
+for (let i = 0; i < filteredAnchorTagIds.length - 1; i++) {
+    let currTag = filteredAnchorTagIds[i];
+    let nextTag = filteredAnchorTagIds[i+1];
 
+    let currTagUrl = currTag.href;
+    let nextTagUrl = nextTag.href;
+
+    let currFootNoteId = currTagUrl.substring(currTagUrl.indexOf("#")).substring(1);
+    let currFootNoteElement = document.getElementsByName(currFootNoteId)[0];
+
+    let nextFootNoteId = nextTagUrl.substring(nextTagUrl.indexOf("#")).substring(1);
+    let nextFootNoteElement = document.getElementsByName(nextFootNoteId)[0];
+
+    let content = getContentBetweenTags(currFootNoteElement, nextFootNoteElement);
+
+    addToolTipForTheCurrentTag(currTag, content);
+    addGoBackUpAnchor(currFootNoteElement, currTag);
+}
+
+// Handling the edge case.
+let lastAnchorTag = filteredAnchorTagIds[filteredAnchorTagIds.length - 1];
+let lastTagUrl = lastAnchorTag.href;
+let lastFootNoteId = lastTagUrl.substring(lastTagUrl.indexOf("#")).substring(1);
+let lastFootNoteElement = document.getElementsByName(lastFootNoteId)[0];
+let lastElement = getLastElementInThePage();
+
+let content = getContentBetweenTags(lastFootNoteElement, lastElement);
+addToolTipForTheCurrentTag(lastAnchorTag, content);
+addGoBackUpAnchor(lastFootNoteElement, lastAnchorTag);
+
+function getLastElementInThePage() {
+    const allFontElements = document.querySelectorAll('font');
+    for (const fontEle of allFontElements) {
+        if (fontEle.color == "888888") {
+            return fontEle;
+        }
+    }
+}
+
+function addToolTipForTheCurrentTag(currentTag, toolTipContent) {
+    let spanElementForToolTipContent = document.createElement('span');
+    spanElementForToolTipContent.classList.add("tooltiptext");
+    spanElementForToolTipContent.innerHTML = toolTipContent;
+
+    currentTag.appendChild(spanElementForToolTipContent);
+    currentTag.classList.add("tooltip");
+}
+
+function addGoBackUpAnchor(footNoteElement, currentTag) {
+    let currentTagName = currentTag.name;
+    let curretTagUrl = currentTag.href;
+    let currentFootNoteName = curretTagUrl.substring(curretTagUrl.indexOf("#")).substring(1);
+    if (!currentTagName) {
+        currentTagName = currentFootNoteName + 'f';
+    }
+
+    currentTag.setAttribute('name', currentTagName);
+    currentTagName = "#" + currentTagName;
+    footNoteElement.href = url + currentTagName;
+
+    let goBackUpAnchor = document.createElement('a');
+    goBackUpAnchor.href = url + currentTagName;
+    goBackUpAnchor.innerHTML = "^";
+    footNoteElement.previousSibling.before(goBackUpAnchor);
+}
+
+function getContentBetweenTags(startElement, endElement) {
+    let content = '';
+    let currentElement = startElement.nextSibling;
+
+    while (currentElement && currentElement !== endElement) {
+        content += currentElement.textContent.trim() + ' ';
+        currentElement = currentElement.nextSibling;
+    }
+
+    // removing [ and ] from the string.
+    content = content.substring(1);
+    content = content.slice(0, -2);
+
+    return content;
+}
