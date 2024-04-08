@@ -1,7 +1,5 @@
 // To Do
-// 1. Make the scroll after the click smooth.
-// 2. Create a popup html and js and interact with content script to modify the width, font type and font size maybe.
-// 3. Stretch To-Do: How can we make this work for all the sites, despite different html structures for diff sites. 
+// 1. Create a popup html and js and interact with content script to modify the width, font type and font size maybe.
 
 const url = window.location.href;
 const allAnchorTags = document.querySelectorAll('a');

@@ -3,6 +3,16 @@
     "name": "foot-notes-reader",
     "description": "An extension that helps you read footnotes in place.",
     "version": "1.0",
+    "action": {
+        "default_popup": "popup.html",
+        "default_icon": "images/logo.png"
+    },
+    "icons": {
+        "16": "images/logo.png",
+        "32": "images/logo.png",
+        "48": "images/logo.png",
+        "128": "images/logo.png"
+      },
     "content_scripts":[
         {
             "js": ["scripts/content-script.js"],
