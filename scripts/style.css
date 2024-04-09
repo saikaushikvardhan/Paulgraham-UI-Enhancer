@@ -20,9 +20,92 @@
   
     opacity: 0;
     transition: opacity 0.3s;
+
+    font-size: 0.8em;
+    line-height: 1em;
   }
   
   .tooltip:hover .tooltiptext {
     visibility: visible;
     opacity: 1;
+  }
+
+  .center {
+    width: 60%;
+    margin: 0 auto;
+  }
+
+  .font-family {
+    font-family: Muli, sans-serif;
+    font-weight: 400;
+    font-weight: 300;
+    color: rgb(29, 31, 33);
+  }
+
+  .font-size {
+    font-size: 1.2em;
+    line-height: 1.6em;
+  }
+  
+  .font-size h1 {
+    font-size: 2.5em;
+  }
+
+  a {
+    color:#3d63b9;
+  }
+
+  #main-content {
+    padding-left: 5%;
+    padding-right: 5%;
+    margin-top: 5%;
+  }
+
+  #navbar {
+    background-color: black;
+    display: flex;
+    width: 100%;
+    position: sticky;
+    top: 0px;
+    line-height: 2em;
+    border-bottom: 1px dotted black;
+    overflow: hidden;
+    flex-wrap: wrap;
+  }
+
+  #navbar a {
+    color: white;
+    text-decoration: none;
+    line-height: 2.5em;
+    font-size: 1.3em;
+    font-family: poppins, sans-serif;
+    text-align: center;
+  }
+
+  #navbar a:hover {
+    text-decoration: underline;
+  }
+
+  body {
+    margin: 0px;
+  }
+
+  @media (min-width: 1200px) {
+    #navbar a { 
+      padding: 5px 15px;
+    }
+  }
+  
+  @media (max-width: 1199px) {
+    #navbar a {
+       padding: 3px 8px;
+       font-size: 1.2em;
+    }
+  }
+  
+  @media (max-width: 991px) {
+    #navbar a { 
+      padding: 3px 6px;
+      font-size: 1em;
+    }
   }

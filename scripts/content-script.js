@@ -1,51 +1,13 @@
-// To Do
-// 1. Create a popup html and js and interact with content script to modify the width, font type and font size maybe.
-// 2. Improve the back button experience. 
-
-const url = window.location.href;
-const allAnchorTags = document.querySelectorAll('a');
-let filteredAnchorTagIds = [];
-
-for (let i = 0; i < allAnchorTags.length; i++) {
-    const currTag = allAnchorTags[i];
-    const currTagUrl = currTag.href;
-
-    if (currTagUrl && currTagUrl.includes(url) && currTagUrl.includes("#")) {
-        filteredAnchorTagIds.push(currTag);
-    }
-}
-
-for (let i = 0; i < filteredAnchorTagIds.length - 1; i++) {
-    let currTag = filteredAnchorTagIds[i];
-    let nextTag = filteredAnchorTagIds[i+1];
-
-    let currTagUrl = currTag.href;
-    let nextTagUrl = nextTag.href;
-
-    let currFootNoteId = currTagUrl.substring(currTagUrl.indexOf("#")).substring(1);
-    let currFootNoteElement = document.getElementsByName(currFootNoteId)[0];
-
-    let nextFootNoteId = nextTagUrl.substring(nextTagUrl.indexOf("#")).substring(1);
-    let nextFootNoteElement = document.getElementsByName(nextFootNoteId)[0];
-
-    let content = getContentBetweenTags(currFootNoteElement, nextFootNoteElement);
-
-    addToolTipForTheCurrentTag(currTag, content);
-    addGoBackUpAnchor(currFootNoteElement, currTag);
-}
-
-// Handling the edge case.
-if (Boolean(filteredAnchorTagIds)) {
-    let lastAnchorTag = filteredAnchorTagIds[filteredAnchorTagIds.length - 1];
-    let lastTagUrl = lastAnchorTag.href;
-    let lastFootNoteId = lastTagUrl.substring(lastTagUrl.indexOf("#")).substring(1);
-    let lastFootNoteElement = document.getElementsByName(lastFootNoteId)[0];
-    let lastElement = getLastElementInThePage();
-
-    let content = getContentBetweenTags(lastFootNoteElement, lastElement);
-    addToolTipForTheCurrentTag(lastAnchorTag, content);
-    addGoBackUpAnchor(lastFootNoteElement, lastAnchorTag);
-}
+/**
+ * To Do
+ * 1. Add tooltips to the go back up anchor.
+ * 2. Improve back button experience.
+ * 3. Make the toolbar responsive for all the screen sizes.
+ * 4. Fix the bug in index.html.
+ * 5. Include elements in the toolbar/popup.html to increase font size.
+ * 6. Enable the option to reset the whole page to default, leaving only the footnotes experience. 
+ * 7. Make the tool-tip view dynamic based on the page availability.
+ */
 
 function getLastElementInThePage() {
     const allFontElements = document.querySelectorAll('font');
@@ -101,39 +63,121 @@ function getContentBetweenTags(startElement, endElement) {
     return content;
 }
 
+// Adding tool-tips to the footnotes.
+const url = window.location.href;
+const allAnchorTags = document.querySelectorAll('a');
+let filteredAnchorTagIds = [];
+
+for (let i = 0; i < allAnchorTags.length; i++) {
+    const currTag = allAnchorTags[i];
+    const currTagUrl = currTag.href;
+
+    if (currTagUrl && currTagUrl.includes(url) && currTagUrl.includes("#")) {
+        filteredAnchorTagIds.push(currTag);
+    }
+}
+
+for (let i = 0; i < filteredAnchorTagIds.length - 1; i++) {
+    let currTag = filteredAnchorTagIds[i];
+    let nextTag = filteredAnchorTagIds[i+1];
+
+    let currTagUrl = currTag.href;
+    let nextTagUrl = nextTag.href;
+
+    let currFootNoteId = currTagUrl.substring(currTagUrl.indexOf("#")).substring(1);
+    let currFootNoteElement = document.getElementsByName(currFootNoteId)[0];
+
+    let nextFootNoteId = nextTagUrl.substring(nextTagUrl.indexOf("#")).substring(1);
+    let nextFootNoteElement = document.getElementsByName(nextFootNoteId)[0];
+
+    let content = getContentBetweenTags(currFootNoteElement, nextFootNoteElement);
+
+    addToolTipForTheCurrentTag(currTag, content);
+    addGoBackUpAnchor(currFootNoteElement, currTag);
+}
+
+// Handling the edge case.
+if (filteredAnchorTagIds.length > 0) {
+    let lastAnchorTag = filteredAnchorTagIds[filteredAnchorTagIds.length - 1];
+    let lastTagUrl = lastAnchorTag.href;
+    let lastFootNoteId = lastTagUrl.substring(lastTagUrl.indexOf("#")).substring(1);
+    let lastFootNoteElement = document.getElementsByName(lastFootNoteId)[0];
+    let lastElement = getLastElementInThePage();
+
+    let content = getContentBetweenTags(lastFootNoteElement, lastElement);
+    addToolTipForTheCurrentTag(lastAnchorTag, content);
+    addGoBackUpAnchor(lastFootNoteElement, lastAnchorTag);
+}
+
 (function addSmoothScroll() {
     const style = document.createElement('style');
     style.textContent = 'html { scroll-behavior: smooth; }';
     document.head.appendChild(style);
 })();
 
+let fetchContent = (mainContentTable) => {
+    let content = document.createElement('div');
+    mainContentTable = mainContentTable.querySelectorAll('td');
 
-/*
-To Do
-1. Add css to the content.
-2. Add a sticky toolbar at the top.
-3. Interact with popup.html to enable font style and size customization.
-*/
+    for (let i = 0; i < mainContentTable.length; i++) {
+        let contentWithin = mainContentTable[i].querySelectorAll('font');
+        for (let j = 0; j < contentWithin.length; j++) {
+            let tempDiv = document.createElement('div');
+            tempDiv.innerHTML = contentWithin[j].innerHTML;
+            content.appendChild(tempDiv);
+        }
+    }
+    return content;
+};
+
+function addStickyToolBar(tableData) {
+    let anchorTagsMenu = tableData[0].querySelectorAll('area');
+    let anchorTagsMenuList = ['Home', 'Essays', 'H&P', 'Books', 'YC', 
+                            'Arc', 'Bel', 'Lisp', 'Spam', 'Responses', 'FAQs', 
+                            'RAQs', 'Quotes', 'RSS', 'Bio', 'Twitter', 'Mastadon', 'Index', 'Email'];
+
+    let navigationBar = document.createElement('div');
+    navigationBar.setAttribute("id", "navbar");
+
+    let i = 0;
+    if (url === "https://paulgraham.com/index.html" || url === "https://paulgraham.com") {
+        i = 1;
+    }
+    for (let j = 0; j < anchorTagsMenu.length; j++) {
+        let currAnchorTag = document.createElement('a');
+        currAnchorTag.href = anchorTagsMenu[j].href;
+        currAnchorTag.innerHTML = anchorTagsMenuList[i];
+        currAnchorTag.classList.add("font-family");
+        navigationBar.appendChild(currAnchorTag);
+        i++;
+    }
+    return navigationBar;
+}
 
 (function beautifyArticle() {
     let tableData = document.querySelectorAll('td');
-    let articleDiv = document.createElement('div');
-    articleDiv.innerHTML = tableData[2].innerHTML;
+    let articleMainContent = tableData[2];
 
     let body = document.querySelectorAll('body')[0];
     let articleContent = document.createElement('div');
-    let articleTableData = articleDiv.querySelectorAll('td')[0];
+    articleContent.setAttribute("id", "main-content");
+    let articleTableData = articleMainContent.querySelectorAll('td')[0];
+    articleContent.classList.add("center");
+    articleContent.classList.add("font-family");
+    articleContent.classList.add("font-size");
 
     let articleHeading = document.createElement('h1')
     articleHeading.innerHTML = articleTableData.querySelectorAll('img')[0].alt;
-    console.log("article Heading: " + articleHeading.textContent);
+    articleHeading.classList.add("font-family");
+    articleHeading.classList.add("font-size");
     articleContent.appendChild(articleHeading);
-    let articleText = document.createElement('div');
-    articleText.innerHTML = articleTableData.querySelectorAll('font')[0].innerHTML;
-    console.log("article text: " + articleText.textContent);
+
+    let articleText = fetchContent(articleMainContent);
+    let toolBar = addStickyToolBar(tableData);
 
     articleContent.appendChild(articleText);
     body.innerHTML = '';
+    body.appendChild(toolBar);
     body.appendChild(articleContent);
 
 })();
