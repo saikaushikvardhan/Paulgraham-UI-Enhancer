@@ -42,6 +42,7 @@ function addGoBackUpAnchor(footNoteElement, currentTag) {
     let goBackUpAnchor = document.createElement('a');
     goBackUpAnchor.href = url + currentTagName;
     goBackUpAnchor.innerHTML = "^";
+    addToolTipForTheCurrentTag(goBackUpAnchor, "Return to the article");
     footNoteElement.previousSibling.before(goBackUpAnchor);
 }
 
