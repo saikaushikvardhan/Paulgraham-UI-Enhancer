@@ -1,12 +1,10 @@
 /**
  * To Do
- * 1. Add tooltips to the go back up anchor.
- * 2. Improve back button experience.
- * 3. Make the toolbar responsive for all the screen sizes.
- * 4. Fix the bug in index.html.
- * 5. Include elements in the toolbar/popup.html to increase font size.
- * 6. Enable the option to reset the whole page to default, leaving only the footnotes experience. 
- * 7. Make the tool-tip view dynamic based on the page availability.
+ * 1. Make the tool-tip view dynamic based on the page availability.
+ * 2. Add tooltips to the go back up anchor.
+ * 3. Footnotes are hindered due to the sticky nav bar, add some offset after the scroll action.
+ * 4. Improve back button experience.
+ * 5. Enable the option to reset the whole page to default, leaving only the footnotes experience. 
  */
 
 function getLastElementInThePage() {
@@ -115,20 +113,52 @@ if (filteredAnchorTagIds.length > 0) {
     document.head.appendChild(style);
 })();
 
+function findParentFontTag(currentFontTag) {
+    currentFontTag = currentFontTag.parentNode;
+    while (currentFontTag && currentFontTag.nodeName !== "FONT") {
+        currentFontTag = currentFontTag.parentNode;
+    }
+    return currentFontTag;
+}
+
 let fetchContent = (mainContentTable) => {
     let content = document.createElement('div');
-    mainContentTable = mainContentTable.querySelectorAll('td');
+    mainContentTable = mainContentTable.querySelectorAll('font');
+    const fontElementsIncludedInDom = new Set();
 
     for (let i = 0; i < mainContentTable.length; i++) {
-        let contentWithin = mainContentTable[i].querySelectorAll('font');
-        for (let j = 0; j < contentWithin.length; j++) {
-            let tempDiv = document.createElement('div');
-            tempDiv.innerHTML = contentWithin[j].innerHTML;
-            content.appendChild(tempDiv);
+        let fontId = 'fo' + (i+1);
+        let currFontEle = mainContentTable[i];
+        currFontEle.setAttribute('id', fontId);
+
+        let parentFontNode = findParentFontTag(currFontEle);
+        if (parentFontNode && fontElementsIncludedInDom.has(parentFontNode.id)) {
+            console.log("Parent font added");
+            console.log("font Id: " + fontId);
+            fontElementsIncludedInDom.add(fontId);
+            continue;
         }
+
+        let tempDiv = document.createElement('div');
+        tempDiv.innerHTML = mainContentTable[i].innerHTML;
+        content.appendChild(tempDiv);
+        fontElementsIncludedInDom.add(fontId);
     }
     return content;
 };
+
+let fetchHeading = (mainContentTable) => {
+    let heading = document.createElement('h1');
+    let images = mainContentTable.querySelectorAll('img');
+
+    for (let i = 0; i < images.length; i++) {
+        let imageAlt = images[i].alt;
+        if (imageAlt && imageAlt !== "Click to enlarge") {
+            return imageAlt;
+        }
+    }
+    return '';
+}
 
 function addStickyToolBar(tableData) {
     let anchorTagsMenu = tableData[0].querySelectorAll('area');
@@ -167,7 +197,7 @@ function addStickyToolBar(tableData) {
     articleContent.classList.add("font-size");
 
     let articleHeading = document.createElement('h1')
-    articleHeading.innerHTML = articleTableData.querySelectorAll('img')[0].alt;
+    articleHeading.innerHTML = fetchHeading(articleMainContent);
     articleHeading.classList.add("font-family");
     articleHeading.classList.add("font-size");
     articleContent.appendChild(articleHeading);
