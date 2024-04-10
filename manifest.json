@@ -1,6 +1,6 @@
 {
     "manifest_version": 3,
-    "name": "foot-notes-reader",
+    "name": "modern-reads",
     "description": "An extension that improves the UI of paulgraham.com website",
     "version": "1.0",
     "action": {
@@ -18,5 +18,6 @@
             "css": ["scripts/style.css"],
             "matches": ["https://paulgraham.com/*"]
         }
-    ]
+    ],
+    "permissions":[]
 }

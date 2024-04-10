@@ -1,11 +1,3 @@
-/**
- * To Do
- * 1. Make the tool-tip view dynamic based on the page availability.
- * 2. Enable the option to reset the whole page to default, leaving only the footnotes experience. 
- * 3. Improve back button experience. 
- * 4. Change/remove popup.html
- */
-
 function getLastElementInThePage() {
     const allFontElements = document.querySelectorAll('font');
     for (const fontEle of allFontElements) {
