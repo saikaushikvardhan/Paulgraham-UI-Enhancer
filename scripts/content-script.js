@@ -1,8 +1,9 @@
 /**
  * To Do
  * 1. Make the tool-tip view dynamic based on the page availability.
- * 2. Improve back button experience.
- * 3. Enable the option to reset the whole page to default, leaving only the footnotes experience. 
+ * 2. Enable the option to reset the whole page to default, leaving only the footnotes experience. 
+ * 3. Improve back button experience. 
+ * 4. Change/remove popup.html
  */
 
 function getLastElementInThePage() {
@@ -222,8 +223,6 @@ function addStickyToolBar(tableData) {
     }
 
     for (let i = 0; i < filteredAnchorTagIds.length; i++) {
-        console.log("i: " + i);
-        console.log("content: " + filteredAnchorTagIds[i]);
         filteredAnchorTagIds[i].style.scrollMarginTop = '4em';
     }
 
