@@ -1,4 +1,4 @@
-# Footnotes-Reader
+# Modern Reads: [Paul Graham](https://paulgraham.com/) UI Enhancer
 Creating a web extension to enable in-place footnote reading (kinda like Wikipedia) for paulg articles.
 
 To use the extension: 
