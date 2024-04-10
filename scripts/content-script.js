@@ -1,10 +1,8 @@
 /**
  * To Do
  * 1. Make the tool-tip view dynamic based on the page availability.
- * 2. Add tooltips to the go back up anchor.
- * 3. Footnotes are hindered due to the sticky nav bar, add some offset after the scroll action.
- * 4. Improve back button experience.
- * 5. Enable the option to reset the whole page to default, leaving only the footnotes experience. 
+ * 2. Improve back button experience.
+ * 3. Enable the option to reset the whole page to default, leaving only the footnotes experience. 
  */
 
 function getLastElementInThePage() {
@@ -43,6 +41,7 @@ function addGoBackUpAnchor(footNoteElement, currentTag) {
     goBackUpAnchor.href = url + currentTagName;
     goBackUpAnchor.innerHTML = "^";
     addToolTipForTheCurrentTag(goBackUpAnchor, "Return to the article");
+    goBackUpAnchor.style.padding = '3px';
     footNoteElement.previousSibling.before(goBackUpAnchor);
 }
 
@@ -134,8 +133,6 @@ let fetchContent = (mainContentTable) => {
 
         let parentFontNode = findParentFontTag(currFontEle);
         if (parentFontNode && fontElementsIncludedInDom.has(parentFontNode.id)) {
-            console.log("Parent font added");
-            console.log("font Id: " + fontId);
             fontElementsIncludedInDom.add(fontId);
             continue;
         }
@@ -192,7 +189,6 @@ function addStickyToolBar(tableData) {
     let body = document.querySelectorAll('body')[0];
     let articleContent = document.createElement('div');
     articleContent.setAttribute("id", "main-content");
-    let articleTableData = articleMainContent.querySelectorAll('td')[0];
     articleContent.classList.add("center");
     articleContent.classList.add("font-family");
     articleContent.classList.add("font-size");
@@ -210,5 +206,25 @@ function addStickyToolBar(tableData) {
     body.innerHTML = '';
     body.appendChild(toolBar);
     body.appendChild(articleContent);
+
+})();
+
+(function addOffSetToAnchorTags() {
+    filteredAnchorTagIds = [];
+    let allAnchorTags = document.querySelectorAll('a');
+    for (let i = 0; i < allAnchorTags.length; i++) {
+        let currTag = allAnchorTags[i];
+        let currTagUrl = currTag.href;
+    
+        if (currTagUrl && currTagUrl.includes(url) && currTagUrl.includes("#")) {
+            filteredAnchorTagIds.push(currTag);
+        }
+    }
+
+    for (let i = 0; i < filteredAnchorTagIds.length; i++) {
+        console.log("i: " + i);
+        console.log("content: " + filteredAnchorTagIds[i]);
+        filteredAnchorTagIds[i].style.scrollMarginTop = '4em';
+    }
 
 })();
