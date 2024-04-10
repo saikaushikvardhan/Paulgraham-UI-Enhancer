@@ -6,7 +6,7 @@
   .tooltip .tooltiptext {
     visibility: hidden;
     width: 20rem;
-    background-color: #555;
+    background-color: #0a0909;
     color: #fff;
     text-align: center;
     padding: 1rem 1rem;
@@ -39,7 +39,7 @@
     font-family: Muli, sans-serif;
     font-weight: 400;
     font-weight: 300;
-    color: rgb(29, 31, 33);
+    color: #0a0909
   }
 
   .font-size {
@@ -62,13 +62,13 @@
   }
 
   #navbar {
-    background-color: black;
+    background-color: #0a0909;
     display: flex;
     width: 100%;
     position: sticky;
     top: 0px;
     line-height: 2em;
-    border-bottom: 1px dotted black;
+    border-bottom: 1px dotted #0a0909;
     overflow: hidden;
     flex-wrap: wrap;
   }

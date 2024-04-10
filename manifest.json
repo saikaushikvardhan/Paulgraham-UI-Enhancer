@@ -4,7 +4,6 @@
     "description": "An extension that improves the UI of paulgraham.com website",
     "version": "1.0",
     "action": {
-        "default_popup": "popup.html",
         "default_icon": "images/logo.png"
     },
     "icons": {
