@@ -1,6 +1,6 @@
 {
     "manifest_version": 3,
-    "name": "modern-reads",
+    "name": "Modern-Reads: PaulGraham UI Enhancer",
     "description": "An extension that improves the UI of paulgraham.com website",
     "version": "1.0",
     "action": {
