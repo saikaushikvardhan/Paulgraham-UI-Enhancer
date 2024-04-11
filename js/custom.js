@@ -161,8 +161,10 @@ function addStickyToolBar(tableData) {
     navigationBar.setAttribute("id", "navbar");
 
     let i = 0;
-    if (url === "https://paulgraham.com/index.html" || url === "https://paulgraham.com") {
+    console.log("url: " + url);
+    if (url === "https://paulgraham.com/index.html" || url === "https://paulgraham.com/" || url === "https://paulgraham.com") {
         i = 1;
+        console.log("check");
     }
     for (let j = 0; j < anchorTagsMenu.length; j++) {
         let currAnchorTag = document.createElement('a');
