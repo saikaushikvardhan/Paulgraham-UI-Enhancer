@@ -14,8 +14,8 @@
       },
     "content_scripts":[
         {
-            "js": ["scripts/content-script.js"],
-            "css": ["scripts/style.css"],
+            "js": ["js/content-script.js"],
+            "css": ["js/style.css"],
             "matches": ["https://paulgraham.com/*"]
         }
     ],
