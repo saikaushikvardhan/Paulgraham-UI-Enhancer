@@ -7,6 +7,6 @@ To use the extension:
 - Unpack the extension and use it.
 
 
-Will also try to publish the extension to chrome web store, meanwhile follow the above steps to use the extension. 
+Find the extension in Chrome store [here](https://chromewebstore.google.com/detail/modern-reads-paulgraham-u/epffpahhebleiaacjlhknhallocmhbec).
 
 P.S. This works for most chromium browsers, might not work for firefox.
